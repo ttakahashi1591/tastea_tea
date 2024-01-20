@@ -16,9 +16,9 @@ def load_test_data
   @mewtwo_matcha = Tea.create!(name: "Mewtwo Matcha Zen", type: "matcha", description: "Premium matcha powder for a vibrant and energizing experience", temperature: 175, brew_time: 2)
   @gengar_ginger_lemon = Tea.create!(name: "Gengar Ginger Lemon Zest", type: "herbal", description: "Invigorating herbal blend with ginger and zesty lemon", temperature: 212, brew_time: 5)
 
-  @leafy = Subscription.create!(name: "Grass Type Pack", price: 15.99, status: false, frequency: "Bi-Weekly")
+  @leafy = Subscription.create!(name: "Grass Type Pack", price: 15.99, status: true, frequency: "Bi-Weekly")
   @fiery = Subscription.create!(name: "Fire Type Pack", price: 18.49, status: true, frequency: "Monthly")
-  @splashy = Subscription.create!(name: "Water Type Pack", price: 22.99, status: false, frequency: "Monthly")
+  @splashy = Subscription.create!(name: "Water Type Pack", price: 22.99, status: true, frequency: "Monthly")
   @sparky = Subscription.create!(name: "Electric Type Pack", price: 19.99, status: true, frequency: "Weekly")
 
   SubscriptionTea.create!(subscription: @leafy, tea: @bulbasaur_blend)

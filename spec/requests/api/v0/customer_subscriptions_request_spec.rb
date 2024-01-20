@@ -8,8 +8,9 @@ describe "CustomerSubscriptions API Endpoints" do
   describe "CustomerSubcriptions Create Endpoint" do
     describe "Happy Path" do
       it "supports with creating the association between a customer and their new subscription" do
+        # require 'pry'; binding.pry
         expect(@ash.subscriptions).to eq([@leafy])
-        expect(@brock.subscriptions).to eq([])
+        expect(@brock.subscriptions).to eq([@splashy])
 
         post "/api/v0/customers/#{@ash.id}/subscriptions", params: {subscription_id: @sparky.id}
 
@@ -32,7 +33,6 @@ describe "CustomerSubscriptions API Endpoints" do
 
     describe "Sad Paths" do
       xit "does not allow a customer to subscribe to the subscription if they are already subscribed" do
-
         expect(@ash.subscriptions).to eq([@leafy, @splashy])
 
         post "/api/v1/customers/#{@ash.id}/subscriptions", params: {subscription_id: @splashy.id}
@@ -45,7 +45,9 @@ describe "CustomerSubscriptions API Endpoints" do
   describe "CustomerSubscriptions Destroy Endpoint" do
     describe "Happy Path" do
       it "supports with destroying (unsubscribe) an association between a cusotmer and their subscription" do
-        expect(@ash.subscriptions).to eq([@leafy, @spalshy])
+        post "/api/v0/customers/#{@ash.id}/subscriptions", params: {subscription_id: @splashy.id}
+
+        expect(@ash.subscriptions).to eq([@leafy, @splashy])
 
         delete "/api/v1/customers/#{@ash.id}/subscriptions", params: {subscription_id: @spalshy.id}
 
@@ -60,7 +62,7 @@ describe "CustomerSubscriptions API Endpoints" do
     end
 
     describe "Sad Paths" do
-      
+
     end
   end
 end
