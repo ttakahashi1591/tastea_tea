@@ -1,9 +1,9 @@
 FactoryBot.define do
-  factory :book do
-    title { "MyString" }
-    author { "MyString" }
-    genre { "MyString" }
-    summary { "MyText" }
-    number_sold { 1 }
+  factory :tea do
+    name { Faker::Tea.variety }
+    tea_type { rand(1..10) } 
+    description { Faker::Lorem.sentence }
+    temperature { Faker::Number.between(from: 160, to: 212) } 
+    brew_time { Faker::Number.between(from: 2, to: 7) } 
   end
 end
