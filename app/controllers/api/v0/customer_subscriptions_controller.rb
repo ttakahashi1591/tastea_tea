@@ -1,7 +1,6 @@
 class Api::V0::CustomerSubscriptionsController < ApplicationController 
   def create 
-    require 'pry'; binding.pry
-    CustomerSubscription.create!(customer_subscription_params)
+    customer = CustomerSubscription.create!(customer_subscription_params)
 
     render json: {message: "Successfully subscribed!"}, status: 200
   end

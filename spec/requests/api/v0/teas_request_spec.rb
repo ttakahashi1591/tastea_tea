@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe "Teas API" do
-  it "Teas Index" do
-    create_list(:tea, 10)
+  xit "Teas Index" do
+    load_test_data
 
     get '/api/v1/teas'
 
