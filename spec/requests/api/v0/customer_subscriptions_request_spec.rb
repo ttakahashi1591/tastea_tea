@@ -7,6 +7,7 @@ describe "CustomerSubscriptions API Endpoints" do
         load_test_data
 
         expect(@ash.subscriptions).to eq([@leafy])
+        expect(@brock.subscriptions).to eq([@splashy])
 
         post "/api/v0/customers/#{@ash.id}/subscriptions", params: { subscription_id: @sparky.id }
 
@@ -17,6 +18,16 @@ describe "CustomerSubscriptions API Endpoints" do
         @ash = Customer.find(@ash.id)
       
         expect(@ash.subscriptions).to eq([@leafy, @sparky])
+
+        post "/api/v0/customers/#{@brock.id}/subscriptions", params: { subscription_id: @sparky.id }
+
+        expect(response).to be_successful
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)["message"]).to eq("Successfully subscribed!")
+
+        @brock = Customer.find(@brock.id)
+      
+        expect(@brock.subscriptions).to eq([@splashy, @sparky])
       end 
     end
 
@@ -25,8 +36,13 @@ describe "CustomerSubscriptions API Endpoints" do
         load_test_data
 
         expect(@ash.subscriptions).to eq([@leafy])
+        expect(@brock.subscriptions).to eq([@splashy])
 
         post "/api/v1/customers/#{@ash.id}/subscriptions", params: {subscription_id: @leafy.id}
+
+        expect(response).to_not be_successful
+
+        post "/api/v1/customers/#{@brock.id}/subscriptions", params: {subscription_id: @splashy.id}
 
         expect(response).to_not be_successful
       end
@@ -38,6 +54,18 @@ describe "CustomerSubscriptions API Endpoints" do
       it "supports with destroying (unsubscribe) an association between a cusotmer and their subscription" do
         load_test_data
         
+        expect(@ash.subscriptions).to eq([@leafy])
+
+        post "/api/v0/customers/#{@ash.id}/subscriptions", params: { subscription_id: @sparky.id }
+
+        expect(response).to be_successful
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)["message"]).to eq("Successfully subscribed!")
+
+        @ash = Customer.find(@ash.id)
+      
+        expect(@ash.subscriptions).to eq([@leafy, @sparky])
+
         delete "/api/v0/customers/#{@ash.id}/subscriptions", params: {subscription_id: @leafy.id}
 
         expect(response).to be_successful
@@ -46,7 +74,7 @@ describe "CustomerSubscriptions API Endpoints" do
         
         @ash = Customer.find(@ash.id)
 
-        expect(@ash.subscriptions).to eq([])
+        expect(@ash.subscriptions).to eq([@sparky])
       end
     end
 
