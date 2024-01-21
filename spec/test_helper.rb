@@ -34,9 +34,9 @@ def load_test_data
   SubscriptionTea.create!(subscription: @leafy, tea: @mewtwo_matcha)
   SubscriptionTea.create!(subscription: @fiery, tea: @gengar_ginger_lemon)
 
-  CustomerSubscription.create!(customer: @ash, subscription: @leafy)
-  CustomerSubscription.create!(customer: @misty, subscription: @fiery)
-  CustomerSubscription.create!(customer: @brock, subscription: @splashy)
-  CustomerSubscription.create!(customer: @may, subscription: @sparky)
-  CustomerSubscription.create!(customer: @tsutomu, subscription: @sparky)
+  CustomerSubscription.create!(customer: @ash, subscription: @leafy, status: "active")
+  CustomerSubscription.create!(customer: @misty, subscription: @fiery, status: "cancelled")
+  CustomerSubscription.create!(customer: @brock, subscription: @splashy, status: "active")
+  CustomerSubscription.create!(customer: @may, subscription: @sparky, status: "paused")
+  CustomerSubscription.create!(customer: @tsutomu, subscription: @sparky, status: "active" )
 end
