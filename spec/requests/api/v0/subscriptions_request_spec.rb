@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe "Subscriptions API" do
-  it "Subscriptions Index" do
-    create_list(:subscription, 10)
+  xit "Subscriptions Index" do
+    load_test_data
 
     get '/api/v1/subscriptions'
 

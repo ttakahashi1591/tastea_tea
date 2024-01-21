@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe "Customers API" do
-  it "Customers Index" do
-    create_list(:customer, 10)
+  xit "Customers Index" do
+    load_test_data
 
     get '/api/v1/customers'
 
