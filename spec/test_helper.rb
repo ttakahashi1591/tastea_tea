@@ -35,6 +35,7 @@ def load_test_data
   SubscriptionTea.create!(subscription: @fiery, tea: @gengar_ginger_lemon)
 
   CustomerSubscription.create!(customer: @ash, subscription: @leafy, status: "active")
+  CustomerSubscription.create!(customer: @ash, subscription: @sparky, status: "cancelled")
   CustomerSubscription.create!(customer: @misty, subscription: @fiery, status: "cancelled")
   CustomerSubscription.create!(customer: @brock, subscription: @splashy, status: "active")
   CustomerSubscription.create!(customer: @may, subscription: @sparky, status: "paused")
