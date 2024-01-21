@@ -1,14 +1,11 @@
 require 'rails_helper'
 
 describe "CustomerSubscriptions API Endpoints" do
-  before(:each) do
-    load_test_data
-  end
-  
   describe "CustomerSubcriptions Create Endpoint" do
     describe "Happy Path" do
       it "supports with creating the association between a customer and their new subscription" do
-        # require 'pry'; binding.pry
+        load_test_data
+  #  require 'pry'; binding.pry
         expect(@ash.subscriptions).to eq([@leafy])
         expect(@brock.subscriptions).to eq([@splashy])
 
