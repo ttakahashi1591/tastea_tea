@@ -51,7 +51,7 @@ describe "CustomerSubscriptions API Endpoints" do
 
   describe "CustomerSubscriptions Destroy Endpoint" do
     describe "Happy Path" do
-      it "supports with destroying (unsubscribe) an association between a cusotmer and their subscription" do
+      it "supports with cancelling (unsubscribe) an association between a cusotmer and their subscription" do
         load_test_data
 
         expect(@ash.subscriptions).to eq([@leafy, @sparky])
@@ -72,4 +72,47 @@ describe "CustomerSubscriptions API Endpoints" do
 
     end
   end
+
+  describe "CustomerSubcriptions Index Endpoint" do
+    describe "Happy Path" do
+      it "returns list of all customer's subscriptions, regardless of status" do
+        load_test_data 
+
+        get "/api/v1/customers/#{@ash.id}/subscriptions" 
+
+        expect(response).to be_successful
+        expect(response.status).to eq(200)
+
+        subscriptions = JSON.parse(response.body, symbolize_names: true)[:data]
+
+        expect(subscriptions).to be_an(Array)
+        expect(subscriptions.count).to eq(2)
+        expect(subscriptions.first[:id]).to eq(@leafy.id)
+        expect(subscriptions.first[:attributes][:name]).to eq(@leafy.name)
+        expect(subscriptions.first[:attributes][:status]).to eq("Active")
+        expect(subscriptions.second[:id]).to eq(@sparky.id)
+        expect(subscriptions.second[:attributes][:name]).to eq(@sparky.name)
+        expect(subscriptions.second[:attributes][:status]).to eq("Cancelled")
+      end
+
+      xit "will return an empty array if customer has no subscriptions they are subscribed to" do
+        load_test_data 
+
+        get "/api/v1/customers/#{@james.id}/subscriptions" 
+
+        expect(response).to be_successful
+        expect(response.status).to eq(200)
+
+        subscriptions = JSON.parse(response.body, symbolize_names: true)[:data]
+        expect(subscriptions).to eq([])
+      end
+    end
+
+    describe "Sad Paths" do   
+      xit "returns an error if a customer requested is not found" do
+
+      end
+    end
+  end
+ 
 end
