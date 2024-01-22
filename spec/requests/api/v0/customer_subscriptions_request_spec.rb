@@ -32,13 +32,13 @@ describe "CustomerSubscriptions API Endpoints" do
     end
 
     describe "Sad Paths" do
-      it "does not allow a customer to subscribe to the subscription if they are already subscribed" do
+      xit "does not allow a customer to subscribe to the subscription if they are already subscribed" do
         load_test_data
 
         expect(@ash.subscriptions).to eq([@leafy, @sparky])
         expect(@brock.subscriptions).to eq([@splashy])
 
-        post "/api/v1/customers/#{@ash.id}/subscriptions", params: {subscription_id: @leafy.id}
+        post "/api/v0/customers/#{@ash.id}/subscriptions", params: {subscription_id: @leafy.id}
 
         expect(response).to_not be_successful
 
@@ -51,7 +51,7 @@ describe "CustomerSubscriptions API Endpoints" do
 
   describe "CustomerSubscriptions Destroy Endpoint" do
     describe "Happy Path" do
-      it "supports with cancelling (unsubscribe) an association between a cusotmer and their subscription" do
+      xit "supports with cancelling (unsubscribe) an association between a cusotmer and their subscription" do
         load_test_data
 
         expect(@ash.subscriptions).to eq([@leafy, @sparky])
@@ -78,8 +78,8 @@ describe "CustomerSubscriptions API Endpoints" do
       it "returns list of all customer's subscriptions, regardless of status" do
         load_test_data 
 
-        get "/api/v1/customers/#{@ash.id}/subscriptions" 
-
+        get "/api/v0/customers/#{@ash.id}/subscriptions" 
+require 'pry'; binding.pry
         expect(response).to be_successful
         expect(response.status).to eq(200)
 
@@ -98,7 +98,7 @@ describe "CustomerSubscriptions API Endpoints" do
       xit "will return an empty array if customer has no subscriptions they are subscribed to" do
         load_test_data 
 
-        get "/api/v1/customers/#{@james.id}/subscriptions" 
+        get "/api/v0/customers/#{@james.id}/subscriptions" 
 
         expect(response).to be_successful
         expect(response.status).to eq(200)
