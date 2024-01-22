@@ -11,11 +11,13 @@ class Api::V0::CustomerSubscriptionsController < ApplicationController
     render json: {message: "Successfully subscribed!"}, status: 200
   end
 
-  # def destroy 
-  #   subscription = CustomerSubscription.find_by(customer_subscription_params)
+  def update 
+    subscription =  CustomerSubscription.find_by(customer_id: params[:customer_id], subscription_id: params[:id])
 
-  #   subscription.destroy
-  # end
+    subscription.update(status: params[:status])
+    
+    render json: {message: "Subscription Cancelled"}
+  end
 
   private 
 

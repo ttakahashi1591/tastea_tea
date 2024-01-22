@@ -65,9 +65,10 @@ describe "CustomerSubscriptions API Endpoints" do
 
         patch "/api/v0/customers/#{@ash.id}/subscriptions/#{@leafy.id}", params: {status: "cancelled"}
 
-        expect(response).to be_successful
+        message = JSON.parse(response.body, symbolize_names: true)[:message]
+        
         expect(response.status).to eq(200)
-        expect(response.body).to eq("Subscription Cancelled")
+        expect(message).to eq("Subscription Cancelled")
         
         get "/api/v0/customers/#{@ash.id}/subscriptions"
 
