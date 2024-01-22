@@ -125,7 +125,7 @@ describe "CustomerSubscriptions API Endpoints" do
 
   describe "CustomerSubscriptions Update Endpoint" do
     describe "Happy Path" do
-      it "supports with cancelling (unsubscribe) an association between a cusotmer and their subscription" do
+      it "supports with cancelling (unsubscribe) an association between a customer and their subscription" do
         load_test_data
 
         expect(@ash.subscriptions).to eq([@leafy, @sparky])
@@ -151,10 +151,109 @@ describe "CustomerSubscriptions API Endpoints" do
         expect(subscriptions_2.first[:id]).to eq(@leafy.id)
         expect(subscriptions_2.first[:attributes][:status]).to eq("cancelled")
       end
+
+      it "supports with pausing an association between a customer and their subscription" do
+        load_test_data
+
+        get "/api/v1/customers/#{@ash.id}/subscriptions"
+
+        subscriptions_1 = JSON.parse(response.body, symbolize_names: true)[:data]
+
+        expect(subscriptions_1.first[:id]).to eq(@leafy.id)
+        expect(subscriptions_1.first[:attributes][:status]).to eq("active")
+
+        patch "/api/v1/customers/#{@ash.id}/subscriptions/#{@leafy.id}", params: {status: "paused"}
+
+        expect(response).to be_successful
+        expect(response.status).to eq(200)
+
+        message = JSON.parse(response.body, symbolize_names: true)[:message]
+
+        expect(message).to eq("Subscription Paused")
+
+        get "/api/v1/customers/#{@ash.id}/subscriptions"
+
+        subscriptions_2 = JSON.parse(response.body, symbolize_names: true)[:data]
+
+        expect(subscriptions_2.first[:id]).to eq(@leafy.id)
+        expect(subscriptions_2.first[:attributes][:status]).to eq("paused")
+      end
     end
 
     describe "Sad Paths" do
+      it "will return an error if association does not exist" do
+        load_test_data
 
+        patch "/api/v1/customers/#{@james.id}/subscriptions/#{@sparky.id}", params: {status: "cancelled"}
+
+        expect(response).to_not be_successful
+        expect(response.status).to eq(422)
+
+        error = JSON.parse(response.body, symbolize_names: true)
+
+        expected = {
+          errors: [
+            detail: "James has no subscription to Electric Type Pack that can be updated"
+          ]
+        }
+
+        expect(error).to eq(expected)
+      end
+
+      it "will return an error if the given status is not a valid status" do
+        load_test_data
+
+        patch "/api/v1/customers/#{@ash.id}/subscriptions/#{@leafy.id}", params: {status: "pikachu"}
+
+        expect(response).to_not be_successful
+        expect(response.status).to eq(422)
+
+        error = JSON.parse(response.body, symbolize_names: true)
+
+        expected = {
+          errors: [
+            detail: "'pikachu' is not a valid status"
+          ]
+        }
+
+        expect(error).to eq(expected)
+      end
+
+      it "will return an error if the customer doesn't exist" do
+        patch "/api/v1/customers/456789/subscriptions/7", params: {status: "cancelled"}
+
+        expect(response).to_not be_successful 
+        expect(response.status).to eq(404)
+
+        error = JSON.parse(response.body, symbolize_names: true)
+
+        expected = {
+          errors: [
+            detail: "Couldn't find Customer with 'id'=456789"
+          ]
+        }
+
+        expect(error).to eq(expected)
+      end
+
+      it "will return an error if subscription doesn't exist" do
+        load_test_data
+
+        patch "/api/v1/customers/#{@ash.id}/subscriptions/2353768", params: {status: "cancelled"}
+
+        expect(response).to_not be_successful 
+        expect(response.status).to eq(404)
+
+        error = JSON.parse(response.body, symbolize_names: true)
+
+        expected = {
+          errors: [
+            detail: "Couldn't find Subscription with 'id'=2353768"
+          ]
+        }
+        
+        expect(error).to eq(expected)
+      end
     end
   end
 
@@ -196,7 +295,7 @@ describe "CustomerSubscriptions API Endpoints" do
 
     describe "Sad Paths" do   
       xit "returns an error if a customer requested is not found" do
-        get "/api/v0/customers/151/subscriptions" 
+        get "/api/v0/customers/151263/subscriptions" 
 
         expect(response).to_not be_successful
         expect(response.status).to eq(404)
@@ -205,13 +304,12 @@ describe "CustomerSubscriptions API Endpoints" do
 
         expected = {
           errors: [
-            detail: "Couldn't find Customer with 'id'=151"
+            detail: "Couldn't find Customer with 'id'=151263"
           ]
         }
 
         expect(error).to eq(expected)
       end
     end
-  end
- 
+  end 
 end
