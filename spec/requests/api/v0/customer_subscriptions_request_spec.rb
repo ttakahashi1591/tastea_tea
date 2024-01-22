@@ -79,7 +79,7 @@ describe "CustomerSubscriptions API Endpoints" do
         load_test_data 
 
         get "/api/v0/customers/#{@ash.id}/subscriptions" 
-require 'pry'; binding.pry
+
         expect(response).to be_successful
         expect(response.status).to eq(200)
 
@@ -89,10 +89,10 @@ require 'pry'; binding.pry
         expect(subscriptions.count).to eq(2)
         expect(subscriptions.first[:id]).to eq(@leafy.id)
         expect(subscriptions.first[:attributes][:name]).to eq(@leafy.name)
-        expect(subscriptions.first[:attributes][:status]).to eq("Active")
+        expect(subscriptions.first[:attributes][:status]).to eq("active")
         expect(subscriptions.second[:id]).to eq(@sparky.id)
         expect(subscriptions.second[:attributes][:name]).to eq(@sparky.name)
-        expect(subscriptions.second[:attributes][:status]).to eq("Cancelled")
+        expect(subscriptions.second[:attributes][:status]).to eq("cancelled")
       end
 
       xit "will return an empty array if customer has no subscriptions they are subscribed to" do
