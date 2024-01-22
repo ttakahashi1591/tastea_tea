@@ -9,9 +9,9 @@ class CustomerSubscription < ApplicationRecord
   def unique_or_inactive
     found_customer = CustomerSubscription.find_by(customer_id: self.customer_id, subscription_id: self.subscription_id)
 
-    if !found_customer.nil? && found_customer.status == "Active"
+    if !found_customer.nil? && found_customer.status == "active"
       errors.add(:customer, "is already subscribed!")
-    elsif !found_customer.nil? && found_customer.status != "Active"
+    elsif !found_customer.nil? && found_customer.status != "active"
       found_customer.destroy
     end
   end

@@ -105,7 +105,7 @@ describe "CustomerSubscriptions API Endpoints" do
       it "will return an error if subscription id given is invalid" do
         load_test_data
 
-        post "/api/v1/customers/#{@ash.id}/subscriptions", params: {subscription_id: 151263}
+        post "/api/v0/customers/#{@ash.id}/subscriptions", params: {subscription_id: 151263}
 
         expect(response).to_not be_successful 
         expect(response.status).to eq(404)
@@ -142,7 +142,7 @@ describe "CustomerSubscriptions API Endpoints" do
         message = JSON.parse(response.body, symbolize_names: true)[:message]
 
         expect(response.status).to eq(200)
-        expect(message).to eq("Subscription Cancelled")
+        expect(message).to eq("Subscription cancelled")
         
         get "/api/v0/customers/#{@ash.id}/subscriptions"
 
@@ -155,23 +155,23 @@ describe "CustomerSubscriptions API Endpoints" do
       it "supports with pausing an association between a customer and their subscription" do
         load_test_data
 
-        get "/api/v1/customers/#{@ash.id}/subscriptions"
+        get "/api/v0/customers/#{@ash.id}/subscriptions"
 
         subscriptions_1 = JSON.parse(response.body, symbolize_names: true)[:data]
 
         expect(subscriptions_1.first[:id]).to eq(@leafy.id)
         expect(subscriptions_1.first[:attributes][:status]).to eq("active")
 
-        patch "/api/v1/customers/#{@ash.id}/subscriptions/#{@leafy.id}", params: {status: "paused"}
+        patch "/api/v0/customers/#{@ash.id}/subscriptions/#{@leafy.id}", params: {status: "paused"}
 
         expect(response).to be_successful
         expect(response.status).to eq(200)
 
         message = JSON.parse(response.body, symbolize_names: true)[:message]
 
-        expect(message).to eq("Subscription Paused")
+        expect(message).to eq("Subscription paused")
 
-        get "/api/v1/customers/#{@ash.id}/subscriptions"
+        get "/api/v0/customers/#{@ash.id}/subscriptions"
 
         subscriptions_2 = JSON.parse(response.body, symbolize_names: true)[:data]
 
@@ -184,7 +184,7 @@ describe "CustomerSubscriptions API Endpoints" do
       it "will return an error if association does not exist" do
         load_test_data
 
-        patch "/api/v1/customers/#{@james.id}/subscriptions/#{@sparky.id}", params: {status: "cancelled"}
+        patch "/api/v0/customers/#{@james.id}/subscriptions/#{@sparky.id}", params: {status: "cancelled"}
 
         expect(response).to_not be_successful
         expect(response.status).to eq(422)
@@ -203,7 +203,7 @@ describe "CustomerSubscriptions API Endpoints" do
       it "will return an error if the given status is not a valid status" do
         load_test_data
 
-        patch "/api/v1/customers/#{@ash.id}/subscriptions/#{@leafy.id}", params: {status: "pikachu"}
+        patch "/api/v0/customers/#{@ash.id}/subscriptions/#{@leafy.id}", params: {status: "pikachu"}
 
         expect(response).to_not be_successful
         expect(response.status).to eq(422)
@@ -220,7 +220,7 @@ describe "CustomerSubscriptions API Endpoints" do
       end
 
       it "will return an error if the customer doesn't exist" do
-        patch "/api/v1/customers/456789/subscriptions/7", params: {status: "cancelled"}
+        patch "/api/v0/customers/456789/subscriptions/7", params: {status: "cancelled"}
 
         expect(response).to_not be_successful 
         expect(response.status).to eq(404)
@@ -239,7 +239,7 @@ describe "CustomerSubscriptions API Endpoints" do
       it "will return an error if subscription doesn't exist" do
         load_test_data
 
-        patch "/api/v1/customers/#{@ash.id}/subscriptions/2353768", params: {status: "cancelled"}
+        patch "/api/v0/customers/#{@ash.id}/subscriptions/2353768", params: {status: "cancelled"}
 
         expect(response).to_not be_successful 
         expect(response.status).to eq(404)
@@ -251,7 +251,7 @@ describe "CustomerSubscriptions API Endpoints" do
             detail: "Couldn't find Subscription with 'id'=2353768"
           ]
         }
-        
+
         expect(error).to eq(expected)
       end
     end
@@ -279,7 +279,7 @@ describe "CustomerSubscriptions API Endpoints" do
         expect(subscriptions.second[:attributes][:status]).to eq("cancelled")
       end
 
-      xit "will return an empty array if customer has no subscriptions they are subscribed to" do
+      it "will return an empty array if customer has no subscriptions they are subscribed to" do
         load_test_data 
 
         get "/api/v0/customers/#{@james.id}/subscriptions" 
@@ -294,7 +294,7 @@ describe "CustomerSubscriptions API Endpoints" do
     end
 
     describe "Sad Paths" do   
-      xit "returns an error if a customer requested is not found" do
+      it "returns an error if a customer requested is not found" do
         get "/api/v0/customers/151263/subscriptions" 
 
         expect(response).to_not be_successful

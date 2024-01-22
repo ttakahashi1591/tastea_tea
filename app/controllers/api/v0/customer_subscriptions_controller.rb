@@ -15,13 +15,11 @@ class Api::V0::CustomerSubscriptionsController < ApplicationController
   end
 
   def update 
-    subscription =  CustomerSubscription.find_by(customer: @customer, subscription: @subscription)
+    subscription =  CustomerSubscription.find_by(customer_subscription_params)
 
-    subscription.update(status: params[:status])
+    subscription&.update(status: params[:status]) || no_subscription_error
 
-    if sub.status == "cancelled"
-      render json: {message: "Subscription Cancelled"}
-    end  
+    render json: {message: "Subscription #{subscription.status}"}
   end
 
   private 
@@ -36,5 +34,9 @@ class Api::V0::CustomerSubscriptionsController < ApplicationController
 
   def find_subscription
     @subscription = Subscription.find(params[:subscription_id] || params[:id])
+  end
+
+  def no_subscription_error
+    raise ActiveRecord::RecordInvalid.new(), "#{@customer.first_name} has no subscription to #{@subscription.name} that can be updated"
   end
 end
