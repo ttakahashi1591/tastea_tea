@@ -49,22 +49,32 @@ describe "CustomerSubscriptions API Endpoints" do
     end
   end
 
-  describe "CustomerSubscriptions Destroy Endpoint" do
+  describe "CustomerSubscriptions Update Endpoint" do
     describe "Happy Path" do
-      xit "supports with cancelling (unsubscribe) an association between a cusotmer and their subscription" do
+      it "supports with cancelling (unsubscribe) an association between a cusotmer and their subscription" do
         load_test_data
 
         expect(@ash.subscriptions).to eq([@leafy, @sparky])
 
-        delete "/api/v0/customers/#{@ash.id}/subscriptions", params: {subscription_id: @leafy.id}
+        get "/api/v0/customers/#{@ash.id}/subscriptions"
+
+        subscriptions = JSON.parse(response.body, symbolize_names: true)[:data]
+
+        expect(subscriptions.first[:id]).to eq(@leafy.id)
+        expect(subscriptions.first[:attributes][:status]).to eq("active")
+
+        patch "/api/v0/customers/#{@ash.id}/subscriptions/#{@leafy.id}", params: {status: "cancelled"}
 
         expect(response).to be_successful
-        expect(response.status).to eq(204)
-        expect(response.body).to eq("")
+        expect(response.status).to eq(200)
+        expect(response.body).to eq("Subscription Cancelled")
         
-        @ash = Customer.find(@ash.id)
+        get "/api/v0/customers/#{@ash.id}/subscriptions"
 
-        expect(@ash.subscriptions).to eq([@sparky])
+        subscriptions = JSON.parse(response.body, symbolize_names: true)[:data]
+
+        expect(subscriptions.first[:id]).to eq(@leafy.id)
+        expect(subscriptions.first[:attributes][:status]).to eq("cancelled")
       end
     end
 
@@ -75,7 +85,7 @@ describe "CustomerSubscriptions API Endpoints" do
 
   describe "CustomerSubcriptions Index Endpoint" do
     describe "Happy Path" do
-      it "returns list of all customer's subscriptions, regardless of status" do
+      it "will return a list of all customer's subscriptions no matter what status" do
         load_test_data 
 
         get "/api/v0/customers/#{@ash.id}/subscriptions" 
@@ -104,13 +114,27 @@ describe "CustomerSubscriptions API Endpoints" do
         expect(response.status).to eq(200)
 
         subscriptions = JSON.parse(response.body, symbolize_names: true)[:data]
+
         expect(subscriptions).to eq([])
       end
     end
 
     describe "Sad Paths" do   
       xit "returns an error if a customer requested is not found" do
+        get "/api/v0/customers/151/subscriptions" 
 
+        expect(response).to_not be_successful
+        expect(response.status).to eq(404)
+
+        error = JSON.parse(response.body, symbolize_names: true)
+
+        expected = {
+          errors: [
+            detail: "Couldn't find Customer with 'id'=151"
+          ]
+        }
+
+        expect(error).to eq(expected)
       end
     end
   end
