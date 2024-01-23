@@ -1,15 +1,15 @@
 require "rails_helper" 
 
-RSpec.describe CustomerSubscriptionsSerializer do
+RSpec.describe SubscriptionSerializer do
   it "will return a hash of subscriptions for a requested customer" do
     load_test_data
 
-    serializer = CustomerSubscriptionsSerializer.new(@ash)
+    serializer = SubscriptionSerializer.new(@ash.subscriptions, params: {customer: @ash})
 
     expected_hash = {
       data: [
         {
-          :id=>@leafy.id, 
+          :id=>@leafy.id.to_s, 
           :type=>"subscription", 
           :attributes=>{
             :name=>"Grass Type Pack", 
@@ -18,7 +18,7 @@ RSpec.describe CustomerSubscriptionsSerializer do
             :status=>"active"}
         },
         {
-          :id=>@sparky.id, 
+          :id=>@sparky.id.to_s, 
           :type=>"subscription", 
           :attributes=>{
             :name=>"Electric Type Pack", 
@@ -29,6 +29,6 @@ RSpec.describe CustomerSubscriptionsSerializer do
       ]
     }
 
-    expect(serializer.to_json).to eq(expected_hash)
+    expect(serializer.to_json).to eq(expected_hash.to_json)
   end
 end
