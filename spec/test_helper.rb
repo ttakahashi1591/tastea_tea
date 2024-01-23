@@ -1,9 +1,10 @@
 def load_test_data 
-  @ash = Customer.create!(first_name: "Ash", last_name: "Ketchum", email: "ash.ketchum@example.com", street_address: "Pallet Town", city: "Viridian", state: "Kanto", zip_code: "12345")
-  @misty = Customer.create!(first_name: "Misty", last_name: "Waterflower", email: "misty.waterflower@example.com", street_address: "Cerulean City", city: "Cerulean", state: "Johto", zip_code: "67890")
-  @brock = Customer.create!(first_name: "Brock", last_name: "Rock", email: "brock.rock@example.com", street_address: "Pewter City", city: "Pewter", state: "Sinnoh", zip_code: "13579")
-  @may = Customer.create!(first_name: "May", last_name: "Maple", email: "may.maple@example.com", street_address: "Petalburg City", city: "Hoenn", state: "Unova", zip_code: "24680")
-  @tsutomu = Customer.create!(first_name: "Tsutomu", last_name: "Takahashi", email: "afireinside@example.com", street_address: "Twinleaf Town", city: "Sinnoh", state: "Alola", zip_code: "43210")
+  @ash = Customer.create!(first_name: "Ash", last_name: "Ketchum", email: "ash.ketchum@example.com", street_address: "1234 Pallet Town Road", city: "Viridian", state: "Kanto", zip_code: "12345")
+  @misty = Customer.create!(first_name: "Misty", last_name: "Waterflower", email: "misty.waterflower@example.com", street_address: "2345 Cerulean City Boulevard", city: "Cerulean", state: "Johto", zip_code: "67890")
+  @brock = Customer.create!(first_name: "Brock", last_name: "Rock", email: "brock.rock@example.com", street_address: "3456 Pewter City Highway", city: "Pewter", state: "Sinnoh", zip_code: "13579")
+  @may = Customer.create!(first_name: "May", last_name: "Maple", email: "may.maple@example.com", street_address: "4567 Petalburg City Place", city: "Hoenn", state: "Unova", zip_code: "24680")
+  @james = Customer.create!(first_name: "James", last_name: "Rocket", email: "jimmy.rocket@example.com", street_address: "7645 Calle de Saffron", city: "Saffron", state: "Hirotsu", zip_code: "86324")
+  @tsutomu = Customer.create!(first_name: "Tsutomu", last_name: "Takahashi", email: "afireinside@example.com", street_address: "9876 Twinleaf Town Circle", city: "Sinnoh", state: "Alola", zip_code: "43210")
 
   @bulbasaur_blend = Tea.create!(name: "Bulbasaur Blend", tea_type: "green", description: "A blend of green tea with hints of grass and citrus", temperature: 175, brew_time: 3)
   @charmander_chai = Tea.create!(name: "Charmander Chai", tea_type: "black", description: "Spicy chai with cinnamon, ginger, and a touch of fire", temperature: 200, brew_time: 5)
@@ -34,9 +35,10 @@ def load_test_data
   SubscriptionTea.create!(subscription: @leafy, tea: @mewtwo_matcha)
   SubscriptionTea.create!(subscription: @fiery, tea: @gengar_ginger_lemon)
 
-  CustomerSubscription.create!(customer: @ash, subscription: @leafy)
-  CustomerSubscription.create!(customer: @misty, subscription: @fiery)
-  CustomerSubscription.create!(customer: @brock, subscription: @splashy)
-  CustomerSubscription.create!(customer: @may, subscription: @sparky)
-  CustomerSubscription.create!(customer: @tsutomu, subscription: @sparky)
+  CustomerSubscription.create!(customer: @ash, subscription: @leafy, status: "active")
+  CustomerSubscription.create!(customer: @ash, subscription: @sparky, status: "cancelled")
+  CustomerSubscription.create!(customer: @misty, subscription: @fiery, status: "cancelled")
+  CustomerSubscription.create!(customer: @brock, subscription: @splashy, status: "active")
+  CustomerSubscription.create!(customer: @may, subscription: @sparky, status: "paused")
+  CustomerSubscription.create!(customer: @tsutomu, subscription: @sparky, status: "active" )
 end
