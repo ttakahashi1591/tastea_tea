@@ -65,7 +65,7 @@ describe "CustomerSubscriptions API Endpoints" do
         subscriptions = JSON.parse(response.body, symbolize_names: true)[:data]
 
         expect(subscriptions.count).to eq(2)
-        expect(subscriptions.second[:id]).to eq(@sparky.id)
+        expect(subscriptions.second[:id]).to eq(@sparky.id.to_s)
         expect(subscriptions.second[:attributes][:status]).to eq("cancelled")
 
         post "/api/v0/customers/#{@ash.id}/subscriptions", params: {subscription_id: @sparky.id}
@@ -79,7 +79,7 @@ describe "CustomerSubscriptions API Endpoints" do
         subscriptions = JSON.parse(response.body, symbolize_names: true)[:data]
 
         expect(subscriptions.count).to eq(2)
-        expect(subscriptions.second[:id]).to eq(@sparky.id)
+        expect(subscriptions.second[:id]).to eq(@sparky.id.to_s)
         expect(subscriptions.second[:attributes][:status]).to eq("active")
       end
 
@@ -134,7 +134,7 @@ describe "CustomerSubscriptions API Endpoints" do
 
         subscriptions_1 = JSON.parse(response.body, symbolize_names: true)[:data]
 
-        expect(subscriptions_1.first[:id]).to eq(@leafy.id)
+        expect(subscriptions_1.first[:id]).to eq(@leafy.id.to_s)
         expect(subscriptions_1.first[:attributes][:status]).to eq("active")
 
         patch "/api/v0/customers/#{@ash.id}/subscriptions/#{@leafy.id}", params: {status: "cancelled"}
@@ -148,7 +148,7 @@ describe "CustomerSubscriptions API Endpoints" do
 
         subscriptions_2 = JSON.parse(response.body, symbolize_names: true)[:data]
 
-        expect(subscriptions_2.first[:id]).to eq(@leafy.id)
+        expect(subscriptions_2.first[:id]).to eq(@leafy.id.to_s)
         expect(subscriptions_2.first[:attributes][:status]).to eq("cancelled")
       end
 
@@ -159,7 +159,7 @@ describe "CustomerSubscriptions API Endpoints" do
 
         subscriptions_1 = JSON.parse(response.body, symbolize_names: true)[:data]
 
-        expect(subscriptions_1.first[:id]).to eq(@leafy.id)
+        expect(subscriptions_1.first[:id]).to eq(@leafy.id.to_s)
         expect(subscriptions_1.first[:attributes][:status]).to eq("active")
 
         patch "/api/v0/customers/#{@ash.id}/subscriptions/#{@leafy.id}", params: {status: "paused"}
@@ -175,7 +175,7 @@ describe "CustomerSubscriptions API Endpoints" do
 
         subscriptions_2 = JSON.parse(response.body, symbolize_names: true)[:data]
 
-        expect(subscriptions_2.first[:id]).to eq(@leafy.id)
+        expect(subscriptions_2.first[:id]).to eq(@leafy.id.to_s)
         expect(subscriptions_2.first[:attributes][:status]).to eq("paused")
       end
     end
@@ -271,10 +271,10 @@ describe "CustomerSubscriptions API Endpoints" do
 
         expect(subscriptions).to be_an(Array)
         expect(subscriptions.count).to eq(2)
-        expect(subscriptions.first[:id]).to eq(@leafy.id)
+        expect(subscriptions.first[:id]).to eq(@leafy.id.to_s)
         expect(subscriptions.first[:attributes][:name]).to eq(@leafy.name)
         expect(subscriptions.first[:attributes][:status]).to eq("active")
-        expect(subscriptions.second[:id]).to eq(@sparky.id)
+        expect(subscriptions.second[:id]).to eq(@sparky.id.to_s)
         expect(subscriptions.second[:attributes][:name]).to eq(@sparky.name)
         expect(subscriptions.second[:attributes][:status]).to eq("cancelled")
       end
