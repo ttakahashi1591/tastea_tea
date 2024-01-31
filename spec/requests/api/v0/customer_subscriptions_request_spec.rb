@@ -29,6 +29,32 @@ describe "CustomerSubscriptions API Endpoints" do
       
         expect(@brock.subscriptions).to eq([@splashy, @sparky])
       end 
+
+      it "will replace a cancelled subscription to an active subscription if it already exists" do
+        load_test_data 
+
+        get "/api/v0/customers/#{@ash.id}/subscriptions"
+
+        subscriptions = JSON.parse(response.body, symbolize_names: true)[:data]
+
+        expect(subscriptions.count).to eq(2)
+        expect(subscriptions.second[:id]).to eq(@sparky.id.to_s)
+        expect(subscriptions.second[:attributes][:status]).to eq("cancelled")
+
+        post "/api/v0/customers/#{@ash.id}/subscriptions", params: {subscription_id: @sparky.id}
+
+        expect(response).to be_successful
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)["message"]).to eq("Successfully subscribed!")
+
+        get "/api/v0/customers/#{@ash.id}/subscriptions"
+
+        subscriptions = JSON.parse(response.body, symbolize_names: true)[:data]
+
+        expect(subscriptions.count).to eq(2)
+        expect(subscriptions.second[:id]).to eq(@sparky.id.to_s)
+        expect(subscriptions.second[:attributes][:status]).to eq("active")
+      end
     end
 
     describe "Sad Paths" do
@@ -55,32 +81,6 @@ describe "CustomerSubscriptions API Endpoints" do
         post "/api/v0/customers/#{@brock.id}/subscriptions", params: {subscription_id: @splashy.id}
 
         expect(response).to_not be_successful
-      end
-
-      it "will replace a cancelled subscription to an active subscription if it already exists" do
-        load_test_data 
-
-        get "/api/v0/customers/#{@ash.id}/subscriptions"
-
-        subscriptions = JSON.parse(response.body, symbolize_names: true)[:data]
-
-        expect(subscriptions.count).to eq(2)
-        expect(subscriptions.second[:id]).to eq(@sparky.id.to_s)
-        expect(subscriptions.second[:attributes][:status]).to eq("cancelled")
-
-        post "/api/v0/customers/#{@ash.id}/subscriptions", params: {subscription_id: @sparky.id}
-
-        expect(response).to be_successful
-        expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)["message"]).to eq("Successfully subscribed!")
-
-        get "/api/v0/customers/#{@ash.id}/subscriptions"
-
-        subscriptions = JSON.parse(response.body, symbolize_names: true)[:data]
-
-        expect(subscriptions.count).to eq(2)
-        expect(subscriptions.second[:id]).to eq(@sparky.id.to_s)
-        expect(subscriptions.second[:attributes][:status]).to eq("active")
       end
 
       it "will return an error if customer id given is invalid" do
