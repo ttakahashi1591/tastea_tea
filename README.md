@@ -16,7 +16,7 @@ Tastea Tea is an API which provides a platform built on Rails for managing tea s
 - Create, Migrate, & Seed the Database: 
   - `rails db:{create,migrate,seed}`
 
-- Run the tests suite and there should be 34 tests should be passing:
+- Run the tests suite and there should be 34 tests passing:
   - `bundle exec rspec`
   - `34 examples, 0 failures`
 
